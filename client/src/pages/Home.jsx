@@ -138,7 +138,7 @@ const Home = () => {
                                 name="budget"
                                 placeholder="Enter your budget"
                                 min="500"
-                                max="5000"
+                                max="10000"
                                 value={budget}
                                 onChange={(e) => setBudget(e.target.value)}
                                 autoComplete='off'
