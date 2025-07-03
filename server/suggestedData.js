@@ -1,7 +1,7 @@
 import sql from "./db.js";
 
-const getParts = async (parts) => {
-    const { cpu, gpu, ram, storage, motherboard, powerSupply, pcCase } = parts;
+const getParts = async (finalPartPrice) => {
+    const { cpu, gpu, ram, storage, motherboard, powerSupply, pcCase } = finalPartPrice;
     const cpuPart = await sql`select name, price, url from parts where price <= ${cpu} and category = 'cpu' order by price desc limit 1`;
     const gpuPart = await sql`select name, price, url from parts where price <= ${gpu} and category = 'video-card' order by price desc limit 1`;
     const ramPart = await sql`select name, price, url from parts where price <= ${ram} and category = 'memory' order by price desc limit 1`;

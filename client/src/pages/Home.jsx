@@ -16,9 +16,10 @@ const Home = () => {
         powerSupply: 0,
         pcCase: 0,
     });
+    
     const [budget, setBudget] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [parts, setParts] = useState({});
+    const [finalPartPrice, setFinalPartPrice] = useState({});
     const navigate = useNavigate();
 
     const options = [
@@ -29,14 +30,13 @@ const Home = () => {
 
     useEffect(() => {
         if (priority.name) {
-            const parts = calculateValue(priority, budget);
-            setParts(parts);
-            console.log(parts)
+            const calculatedParts = calculateValue(priority, budget);
+            setFinalPartPrice(calculatedParts);
+            console.log(calculatedParts)
         }
     }, [priority, budget]);
 
     const calculateValue = (priorityObj, budgetValue) => {
-
         const { cpu, gpu, ram, storage, motherboard, powerSupply, pcCase } = priorityObj;
         const budgets = {
             cpu: budgetValue * cpu,
@@ -88,9 +88,10 @@ const Home = () => {
     }
 
     const handleSubmit = async (e) => {
-        console.log(parts);
+        console.log(finalPartPrice);
         e.preventDefault();
         setIsLoading(true);
+
 
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/get-parts`, {
@@ -98,7 +99,7 @@ const Home = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ parts })
+                body: JSON.stringify({ finalPartPrice })
             })
             if (response.ok) {
                 const data = await response.json();
@@ -133,6 +134,7 @@ const Home = () => {
                         <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
                             <input
+                                required
                                 type="number"
                                 id="budget"
                                 name="budget"
@@ -146,7 +148,7 @@ const Home = () => {
                             />
 
                         </div>
-                        <p className="text-xs text-gray-500">Enter budget between $500 and $5,000</p>
+                        <p className="text-xs text-gray-500">Enter budget between $500 and $10,000</p>
                     </div>
 
                     <h3 className='mb-1 font-semibold'>Build Priority</h3>

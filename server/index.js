@@ -19,8 +19,8 @@ app.post("/update-scrape", async (req, res) => {
 });
 
 app.post("/get-parts", async (req, res) => {
-  const { parts } = req.body;
-  const finalParts = await getParts(parts);
+  const { finalPartPrice } = req.body;
+  const finalParts = await getParts(finalPartPrice);
   if (finalParts) {
     res.json({finalParts});
     console.log(finalParts);
