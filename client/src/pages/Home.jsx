@@ -8,15 +8,15 @@ import { useNavigate } from 'react-router-dom';
 const Home = () => {
 
     const [priority, setPriority] = useState({
-        cpu: 0,
-        gpu: 0,
-        ram: 0,
-        storage: 0,
-        motherboard: 0,
-        powerSupply: 0,
-        pcCase: 0,
+        name: 'Balanced',
+        cpu: 0.22,
+        gpu: 0.33,
+        ram: 0.09,
+        storage: 0.12,
+        motherboard: 0.12,
+        powerSupply: 0.07,
+        pcCase: 0.05,
     });
-    
     const [budget, setBudget] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [finalPartPrice, setFinalPartPrice] = useState({});
@@ -51,18 +51,7 @@ const Home = () => {
     };
 
     const handleClick = (label) => {
-        if (label === 'Balanced') {
-            setPriority({
-                name: 'Balanced',
-                cpu: 0.22,
-                gpu: 0.33,
-                ram: 0.09,
-                storage: 0.12,
-                motherboard: 0.12,
-                powerSupply: 0.07,
-                pcCase: 0.05,
-            });
-        } else if (label === 'GPU Focus') {
+        if (label === 'GPU Focus') {
             setPriority({
                 name: 'GPU Focus',
                 cpu: 0.25,
@@ -91,7 +80,6 @@ const Home = () => {
         console.log(finalPartPrice);
         e.preventDefault();
         setIsLoading(true);
-
 
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/get-parts`, {
