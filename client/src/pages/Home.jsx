@@ -51,7 +51,19 @@ const Home = () => {
     };
 
     const handleClick = (label) => {
-        if (label === 'GPU Focus') {
+        if (label === 'Balanced') {
+            setPriority({
+                name: 'Balanced',
+                cpu: 0.22,
+                gpu: 0.33,
+                ram: 0.09,
+                storage: 0.12,
+                motherboard: 0.12,
+                powerSupply: 0.07,
+                pcCase: 0.05,
+            })
+        }
+        else if (label === 'GPU Focus') {
             setPriority({
                 name: 'GPU Focus',
                 cpu: 0.25,
@@ -127,7 +139,7 @@ const Home = () => {
                                 id="budget"
                                 name="budget"
                                 placeholder="Enter your budget"
-                                min="500"
+                                min="700"
                                 max="10000"
                                 value={budget}
                                 onChange={(e) => setBudget(e.target.value)}
@@ -136,7 +148,7 @@ const Home = () => {
                             />
 
                         </div>
-                        <p className="text-xs text-gray-500">Enter budget between $500 and $10,000</p>
+                        <p className="text-xs text-gray-500">Enter budget between $700 and $10,000</p>
                     </div>
 
                     <h3 className='mb-1 font-semibold'>Build Priority</h3>
