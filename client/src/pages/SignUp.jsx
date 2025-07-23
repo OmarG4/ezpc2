@@ -17,6 +17,7 @@ const SignUp = () => {
             setErrorMessage('');
             navigate('/');
         } catch (error) {
+            // Firebase error codes: https://firebase.google.com/docs/auth/admin/errors
             switch (error.code) {
                 case 'auth/email-already-in-use':
                     setErrorMessage('This email is already in use.');

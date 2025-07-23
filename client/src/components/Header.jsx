@@ -1,10 +1,21 @@
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import SignUp from '../pages/SignUp';
-import Login from '../pages/Login';
+import { useUser } from './UserContext';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebaseconfig';
 
 export const Header = () => {
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  }
+
+  const { user } = useUser();
   const navigate = useNavigate();
 
   return (
@@ -20,22 +31,33 @@ export const Header = () => {
               <p className='text-teal-200'>Get optimized PC builds based on your budget and preferences</p>
           </div>
 
+        {user ? (
+          <div className='flex items-center gap-4'>
+            <span className='text-lg font-semibold'>Welcome, {user.email}</span>
+            <button
+              className='bg-teal-800 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-all cursor-pointer'
+              onClick={handleLogout}
+            >
+              Log Out
+            </button>
+          </div>
+          ) : (
           <div className='flex flex-col items-center gap-4'>
-            <button 
-              className='bg-teal-800 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-all'
+            <button
+              className='bg-teal-800 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-all cursor-pointer'
               onClick={() => navigate('/signup')}
             >
               Sign Up
             </button>
 
-            <button 
-              className='bg-teal-800 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-all'
+            <button
+              className='bg-teal-800 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-all cursor-pointer'
               onClick={() => navigate('/login')}
             >
               Log In
             </button>
           </div>
-
+        )}
       </div>
     </header>
   )
