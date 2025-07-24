@@ -7,6 +7,7 @@ import RecommendedBuild from './pages/RecommendedBuild';
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import { UserProvider } from './components/UserContext';
+import PreviousBuilds from './components/PreviousBuilds';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
               <Route path="/recommended" element={<RecommendedBuild />} />
               <Route path='/signup' element={<SignUp />} />
               <Route path='/login' element={<Login />} />
+              <Route path='/previous-builds' element={<PreviousBuilds />} />
             </Routes>
           </main>
           <Footer />

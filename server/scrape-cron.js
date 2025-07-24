@@ -1,4 +1,3 @@
-
 import sql from './db.js';
 
 async function scrapeAndStoreData() {

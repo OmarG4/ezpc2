@@ -1,5 +1,13 @@
+import { useNavigate } from 'react-router-dom';
+
 
 export const Footer = () => {
+
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate('/previous-builds');
+    };
 
     return (
         <footer id='footer' className='w-full bg-[#222831] text-white py-6'>
@@ -11,8 +19,9 @@ export const Footer = () => {
                     <p className='text-white/70'>Build the perfect PC for your needs and budget</p>
                 </div>
 
-                <div>
+                <div className="flex flex-col items-center md:items-start gap-2">
                     <p className="text-sm">&#169; 2025 EzPc. All rights reserved.</p>
+                    <button className="cursor-pointer text-sm" onClick={handleClick}>Previous Builds</button>
                 </div>
 
             </div>

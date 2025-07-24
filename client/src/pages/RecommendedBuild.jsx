@@ -1,4 +1,9 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { useUser } from '../components/UserContext';
+import { FaRegSave } from "react-icons/fa";
+import { db } from '../../firebaseconfig';
+import { useState } from 'react';
 
 const partLabels = {
   cpuPart: 'CPU',
@@ -11,16 +16,53 @@ const partLabels = {
 };
 
 const RecommendedBuild = () => {
+  const [saved, setSaved] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const build = location.state?.finalParts || {};
+  const { user } = useUser();
 
-  // Calculate total price
   const totalPrice = Object.values(build).reduce((sum, partArr) => {
     const part = partArr?.[0];
     return part && part.price ? sum + Number(part.price) : sum;
   }, 0);
 
+  const buildObj = {
+    cpuPart: build.cpuPart?.[0] || null,
+    gpuPart: build.gpuPart?.[0] || null,
+    ramPart: build.ramPart?.[0] || null,
+    storagePart: build.storagePart?.[0] || null,
+    motherboardPart: build.motherboardPart?.[0] || null,
+    powerSupplyPart: build.powerSupplyPart?.[0] || null,
+    casePart: build.casePart?.[0] || null,
+    totalPrice: totalPrice
+  }
+  
+  async function fetchBuildFromFirestore() {
+    const docRef = doc(db, "userBuilds", user.email);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data.builds || [];
+    } else {  
+      console.log("No such document!");
+      return [];
+    }
+  }
+
+  async function saveBuildToFirestore() {
+    let builds = await fetchBuildFromFirestore();
+    await setDoc(doc(db, "userBuilds", user.email), {
+      builds: [...builds, buildObj]
+    }, { merge: true });
+
+    setSaved(true)
+
+    setTimeout(() => {
+      setSaved(false);
+    }, 1500);
+  }
+  
   return (
     <section className="flex flex-col items-center justify-center py-4">
       <div className="flex flex-col items-center justify-center gap-2 pb-4 max-w-150">
@@ -28,7 +70,15 @@ const RecommendedBuild = () => {
         <p className="text-gray-600 max-w-2xl mx-auto text-center">Based on your budget and priorities, here are the best parts we found for you.</p>
       </div>
       <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-3xl">
-        <h3 className="text-lg font-semibold mb-4">Recommended Parts</h3>
+        <div className="flex justify-between mb-4">
+          <h3 className="text-lg font-semibold mb-4">Recommended Parts</h3>
+          <div className="flex flex-col gap-2">
+            <button className='flex justify-end cursor-pointer text-xl hover:opacity-70 transition-all' onClick={saveBuildToFirestore}>
+              <FaRegSave />
+            </button>
+            {saved && <span className="text-green-600 text-sm">Build saved!</span>}
+          </div>
+        </div>
         <div className="mb-6 text-xl font-bold text-teal-700 flex justify-between items-center">
           <span>Total Price:</span>
           <span>${totalPrice.toLocaleString()}</span>
