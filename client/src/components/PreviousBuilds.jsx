@@ -2,7 +2,8 @@ import { getDoc } from "firebase/firestore";
 import { useUser } from '../components/UserContext';
 import { db } from '../../firebaseconfig';
 import { useState, useEffect } from 'react';
-import { doc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 const PreviousBuilds = () => {
 
@@ -24,7 +25,26 @@ const PreviousBuilds = () => {
         }
 
         fetchBuildsFromFirestore();
-    }, [user]);
+    }, [user]);         
+
+    const handleDeleteBuild = async (indexToDelete) => {
+        if (!user?.email) return;
+
+        const docRef = doc(db, "userBuilds", user.email);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            const updatedBuilds = data.builds.filter((_, index) => index !== indexToDelete);
+
+            await setDoc(docRef, { builds: updatedBuilds }, { merge: true });
+
+            // Update local state to reflect the change immediately
+            setBuilds(updatedBuilds);
+        } else {
+            console.log("No such document!");
+        }
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
@@ -35,7 +55,12 @@ const PreviousBuilds = () => {
                 <ul className="space-y-4">
                     {builds.map((build, index) => (
                         <li key={index} className="bg-white p-4 rounded shadow">
-                            <h2 className="text-xl font-semibold mb-2">Build {index + 1}</h2>
+                            <div className='flex justify-between items-center mb-2'>
+                                <h2 className="text-xl font-semibold mb-2">Build {index + 1}</h2>
+                                <button className='cursor-pointer text-red-500 hover:text-red-700 transition-all' onClick={() => handleDeleteBuild(index)}>
+                                    <FaRegTrashAlt />
+                                </button>
+                            </div>
                             <ul>
                                 {Object.entries(build).map(([part, details]) => (
                                     details && details.name ? (

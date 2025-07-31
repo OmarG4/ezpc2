@@ -39,4 +39,9 @@ function extractPrice(rawPrice) {
     return match ? parseFloat(match[1].replace(',', '')) : null;
 }
 
+if (import.meta.url === `file://${process.argv[1]}`) {
+    scrapeAndStoreData();
+}
+
+
 export default scrapeAndStoreData;

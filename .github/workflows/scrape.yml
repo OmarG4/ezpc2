@@ -1,0 +1,32 @@
+name: Scheduled Scraping
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # Run once a month (1st day, midnight UTC)
+  workflow_dispatch:       # Allow manual trigger
+
+jobs:
+  scrape-and-update:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: server
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Scraper Script
+        run: node scrape-cron.js
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
