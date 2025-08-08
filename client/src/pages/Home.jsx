@@ -17,6 +17,7 @@ const Home = () => {
         powerSupply: 0.07,
         pcCase: 0.05,
     });
+    
     const [budget, setBudget] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [finalPartPrice, setFinalPartPrice] = useState({});

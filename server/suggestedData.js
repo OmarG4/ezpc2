@@ -9,6 +9,7 @@ const getParts = async (finalPartPrice) => {
     const motherboardPart = await sql`select name, price, url from parts where price <= ${motherboard} and category = 'motherboard' order by price desc limit 1`;
     const powerSupplyPart = await sql`select name, price, url from parts where price <= ${powerSupply} and category = 'power-supply' order by price desc limit 1`;
     const casePart = await sql`select name, price, url from parts where price <= ${pcCase} and category = 'case' order by price desc limit 1`;
+
     return { cpuPart, gpuPart, ramPart, storagePart, motherboardPart, powerSupplyPart, casePart };
   }
 
